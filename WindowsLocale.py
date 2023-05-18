@@ -11,7 +11,7 @@ from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 
-#keyaleatoria: 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
+#keyaleatoria: sk-8uTh2FRereJoAuNgfo15T3BlbkFJ8j2rMnvVRmICzpp6kaaMaa
 
 def confirmar_chave():
     
