@@ -1,19 +1,63 @@
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import filedialog
 from PyPDF2 import PdfReader
 import json
 import os
+import requests
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.llms import OpenAI
 
-# Configurar a API da OpenAI
-with open(r"env.json") as f:
-    env = json.load(f)
+#keyaleatoria: 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
 
-api_key = env["api_key"]
+def confirmar_chave():
+    
+    global api_key
+    
+    api_key = chave_entry.get()
+    url = "https://api.openai.com/v1/engines"
+    headers = {
+        "Authorization": f"Bearer {api_key}"
+    }
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        messagebox.showinfo(title = 'Verificador de API', message='Chave API valida. Entrando na aplicação...')
+        # print("Chave API válida!")
+        janela_chave.destroy()
+        return True
+    else:
+        messagebox.showwarning("Chave API", "Por favor, insira uma chave API válida.")
+        return False
+
+# Cria uma nova janela para solicitar a chave de API
+janela_chave = tk.Tk()
+janela_chave.title("Chave API")
+janela_chave.geometry("300x100")
+
+# Cria o campo de entrada para a chave de API
+chave_label = tk.Label(janela_chave, text="Insira a chave de API:")
+chave_label.pack()
+
+chave_entry = tk.Entry(janela_chave, show='*')
+chave_entry.pack()
+
+# Cria o botão para confirmar a chave
+confirmar_button = tk.Button(janela_chave, text="Confirmar", command=confirmar_chave)
+confirmar_button.pack()
+
+# Inicia o loop de eventos da janela de chave
+janela_chave.mainloop()
+
+
+# Configurar a API da OpenAI
+# with open(r"env.json") as f:
+#     env = json.load(f)
+
+# api_key = env["api_key"]
 os.environ["OPENAI_API_KEY"] = api_key
 
 # Criar a janela principal
